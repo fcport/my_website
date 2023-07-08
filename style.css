@@ -69,7 +69,7 @@ header {
   grid-column: 7/12;
 }
 
-.projects {
+.education {
   grid-column: 7/12;
 }
 
@@ -143,7 +143,7 @@ button.back::before {
     grid-column: 4/13;
   }
 
-  .projects {
+  .education {
     grid-column: 4/13;
   }
 
@@ -171,7 +171,7 @@ button.back::before {
     grid-column: 2/12;
   }
 
-  .projects {
+  .education {
     grid-column: 2/12;
   }
 

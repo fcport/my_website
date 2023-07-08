@@ -11,15 +11,9 @@ let scene,
   renderer,
   controls,
   sun,
-  aboutMe,
-  projects,
-  blog,
-  workHistory,
+  education,
   saturnRings,
-  aboutMeObj,
-  projectsObj,
-  blogObj,
-  workHistoryObj,
+  educationObj,
   vertices,
   starBox,
   stars;
@@ -28,6 +22,8 @@ let raycaster = new THREE.Raycaster();
 let mouse = new THREE.Vector2();
 let currentIntersections = [];
 let currentClicked;
+
+let planets = [];
 
 let readyClicked = false;
 const manager = new THREE.LoadingManager();
@@ -42,9 +38,44 @@ manager.onLoad = function () {
   loader.remove();
 };
 
+function createPlanet(
+  name,
+  id,
+  rotationSpeed,
+  objTurningSpeed,
+  texturePath,
+  positionX
+) {
+  const geometry = new THREE.SphereGeometry(3);
+  const texture = new THREE.TextureLoader(manager).load(texturePath);
+
+  const material = new THREE.MeshStandardMaterial({
+    map: texture,
+  });
+
+  const planet = new THREE.Mesh(geometry, material);
+  planet.position.set(positionX, 0, 0);
+  const revolutionObj = new THREE.Object3D();
+  scene.add(revolutionObj);
+  revolutionObj.add(planet);
+  planet.onMouseHover = function () {
+    return name;
+  };
+  planet.onClick = function () {
+    openSection(id);
+  };
+  labelsFunctions.addLabelToObject(planet, 2000, 300, name);
+
+  planets.push({
+    planet: planet,
+    revolutionObj: revolutionObj,
+    rotationSpeed,
+    objTurningSpeed,
+  });
+}
+
 function init() {
   scene = new THREE.Scene();
-
   camera = new THREE.PerspectiveCamera(
     65,
     window.innerWidth / window.innerHeight,
@@ -68,29 +99,35 @@ function init() {
   renderer.render(scene, camera);
   createStarsBeginning();
 
+  createPlanet(
+    "ABOUT ME",
+    "ABOUTME",
+    0.0025,
+    0.0025,
+    "./assets/hearth.jpg",
+    30
+  );
+  createPlanet("BLOG", "BLOG", 0.0015, 0.0015, "./assets/mars.jpg", 70);
+  createPlanet(
+    "WORK HISTORY",
+    "WORKHISTORY",
+    0.0005,
+    0.0005,
+    "./assets/venus.jpg",
+    90
+  );
+
   const geometrySunCenter = new THREE.SphereGeometry(10);
-  const geometryAboutMe = new THREE.SphereGeometry(3);
-  const geometryProjects = new THREE.SphereGeometry(3);
+  const geometryeducation = new THREE.SphereGeometry(3);
+
   const geometrySaturnRings = new THREE.RingGeometry(8, 10, 32);
-  const geometryBlog = new THREE.SphereGeometry(3);
-  const geometryWorkHistory = new THREE.SphereGeometry(3);
 
   const sunTexture = new THREE.TextureLoader(manager).load("./assets/sun.jpg");
-  const aboutMeTexture = new THREE.TextureLoader(manager).load(
-    "./assets/hearth.jpg"
-  );
-  // const aboutMeTextureNormal = new THREE.TextureLoader().load(
-  //   "./assets/hearth-normal.tif"
-  // );
-  const projectsTexture = new THREE.TextureLoader(manager).load(
+
+  const educationTexture = new THREE.TextureLoader(manager).load(
     "./assets/saturn.jpg"
   );
-  const blogTexture = new THREE.TextureLoader(manager).load(
-    "./assets/mars.jpg"
-  );
-  const workHistoryTexture = new THREE.TextureLoader(manager).load(
-    "./assets/venus.jpg"
-  );
+
   const saturnRingsTexture = new THREE.TextureLoader(manager).load(
     "./assets/saturn-rings.png"
   );
@@ -99,21 +136,8 @@ function init() {
     map: sunTexture,
   });
 
-  const materialAboutMe = new THREE.MeshStandardMaterial({
-    map: aboutMeTexture,
-    // normalMap: aboutMeTextureNormal,
-  });
-
-  const materialProjects = new THREE.MeshStandardMaterial({
-    map: projectsTexture,
-  });
-
-  const materialBlog = new THREE.MeshStandardMaterial({
-    map: blogTexture,
-  });
-
-  const materialWorkHistory = new THREE.MeshStandardMaterial({
-    map: workHistoryTexture,
+  const materialEducation = new THREE.MeshStandardMaterial({
+    map: educationTexture,
   });
 
   const materialSaturnRings = new THREE.MeshBasicMaterial({
@@ -122,62 +146,36 @@ function init() {
   });
 
   sun = new THREE.Mesh(geometrySunCenter, materialSun);
-  aboutMe = new THREE.Mesh(geometryAboutMe, materialAboutMe);
-  projects = new THREE.Mesh(geometryProjects, materialProjects);
-  blog = new THREE.Mesh(geometryBlog, materialBlog);
-  workHistory = new THREE.Mesh(geometryWorkHistory, materialWorkHistory);
+  education = new THREE.Mesh(geometryeducation, materialEducation);
+
   saturnRings = new THREE.Mesh(geometrySaturnRings, materialSaturnRings);
 
   sun.position.set(0, 0, 0);
-  aboutMe.position.set(30, 0, 0);
-  projects.position.set(50, 0, 0);
-  blog.position.set(70, 0, 0);
-  workHistory.position.set(90, 0, 0);
+  education.position.set(50, 0, 0);
+
   saturnRings.position.set(50, 0, 0);
-  //set ring to horizontal ring
   saturnRings.rotation.x = 0.5 * Math.PI;
 
-  // window.addEventListener("load", () => {
+  educationObj = new THREE.Object3D();
 
-  // });
+  scene.add(sun, educationObj);
+  educationObj.add(education, saturnRings);
 
-  aboutMeObj = new THREE.Object3D();
-  projectsObj = new THREE.Object3D();
-  blogObj = new THREE.Object3D();
-  workHistoryObj = new THREE.Object3D();
-
-  scene.add(sun, aboutMeObj, projectsObj, blogObj, workHistoryObj);
-  aboutMeObj.add(aboutMe);
-  projectsObj.add(projects, saturnRings);
-  blogObj.add(blog);
-  workHistoryObj.add(workHistory);
-
-  aboutMe.onMouseHover = function () {
-    return "About Me";
-  };
-  projects.onMouseHover = function () {
-    return "Projects";
-  };
-  blog.onMouseHover = function () {
-    return "Blog";
-  };
-  workHistory.onMouseHover = function () {
-    return "Work History";
+  education.onMouseHover = function () {
+    return "education";
   };
 
-  aboutMe.onClick = function () {
-    openSection("ABOUTME");
+  education.onClick = function () {
+    openSection("EDU");
   };
 
-  projects.onClick = function () {
-    openSection("PROJECTS");
-  };
-  blog.onClick = function () {
-    openSection("BLOG");
-  };
-  workHistory.onClick = function () {
-    openSection("WORKHISTORY");
-  };
+  planets.push({
+    planet: education,
+    revolutionObj: educationObj,
+    rotationSpeed: 0.0035,
+    objTurningSpeed: 0.0035,
+  });
+  labelsFunctions.addLabelToObject(education, 2000, 300, "EDUCATION");
 
   const pointLight = new THREE.PointLight(0xffffff, 2, 300);
   //the sun shall be the point of light
@@ -269,43 +267,24 @@ function animate() {
   requestAnimationFrame(animate);
   controls.update();
   renderer.render(scene, camera);
-
-  [aboutMeObj, projectsObj, blogObj, workHistoryObj]
+  planets
     .filter((el) =>
       currentIntersections && currentIntersections.length > 0 && !currentClicked
         ? scene.getObjectById(currentIntersections[0].object.id).parent.id !==
-          el.id
+          el.revolutionObj.id
         : true
     )
     .forEach((el) => {
-      switch (el) {
-        case aboutMeObj:
-          aboutMeObj.rotateY(0.0025);
-          break;
-        case projectsObj:
-          projectsObj.rotateY(0.0035);
-          break;
-        case blogObj:
-          blogObj.rotateY(0.0015);
-          break;
-        case workHistoryObj:
-          workHistoryObj.rotateY(0.002);
-          break;
-        default:
-          break;
-      }
+      if (el.objTurningSpeed) el.revolutionObj.rotateY(el.objTurningSpeed);
     });
+
+  planets.forEach((e) => e.planet.rotateY(e.rotationSpeed));
 
   if (!!currentClicked) {
     makeCameraFollowObject(currentClicked);
   }
-  saturnRings.rotateZ(0.002);
-  sun.rotateY(0.00015);
 
-  aboutMe.rotateY(0.0025);
-  projects.rotateY(0.0035);
-  blog.rotateY(0.0015);
-  workHistory.rotateY(0.005);
+  education.rotateY(0.0035);
 
   if (readyClicked && !travelFinished) {
     for (let i = 0; i < vertices.positions.length; i += 3) {
@@ -392,10 +371,10 @@ function back() {
 let travelFinished = false;
 function ready() {
   console.log("ready to launch");
-  labelsFunctions.addLabelToObject(aboutMe, 2000, 300, "ABOUT ME");
-  labelsFunctions.addLabelToObject(projects, 2000, 300, "PROJECTS");
-  labelsFunctions.addLabelToObject(blog, 2000, 300, "BLOG");
-  labelsFunctions.addLabelToObject(workHistory, 2000, 300, "WORK HISTORY");
+  // labelsFunctions.addLabelToObject(aboutMe, 2000, 300, "ABOUT ME");
+  // labelsFunctions.addLabelToObject(education, 2000, 300, "EDUCATION");
+  // labelsFunctions.addLabelToObject(blog, 2000, 300, "BLOG");
+  // labelsFunctions.addLabelToObject(workHistory, 2000, 300, "WORK HISTORY");
   document.querySelector(`#ready`).classList.add("hide");
   const body = document.querySelector(`.hyperspace`);
   body.style.opacity = "0";
@@ -433,9 +412,3 @@ function onWindowResize() {
 
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
-
-// addEventListener("load", (event) => {
-//   console.log("loaded");
-// });
-
-// onload = (event) => {};
