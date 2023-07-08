@@ -117,6 +117,15 @@ function init() {
     90
   );
 
+  createPlanet(
+    "CONTACTS",
+    "CONTACTS",
+    0.0007,
+    0.0007,
+    "./assets/jupiter.jpg",
+    110
+  );
+
   const geometrySunCenter = new THREE.SphereGeometry(10);
   const geometryeducation = new THREE.SphereGeometry(3);
 
@@ -230,7 +239,7 @@ function createStarsBeginning() {
 }
 
 function onDocumentMouseDown(event) {
-  event.preventDefault();
+  // event.preventDefault();
 
   // calculate pointer position in normalized device coordinates
   // (-1 to +1) for both components
