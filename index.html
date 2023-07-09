@@ -59,7 +59,7 @@
       </button>
 
       <section
-        class="about-me hide"
+        class="standard-planet hide"
         id="ABOUTME">
         <h2>About Me</h2>
         <div>
@@ -97,7 +97,7 @@
       </section>
 
       <section
-        class="education hide"
+        class="standard-planet hide"
         id="EDU">
         <h2>Education and Courses</h2>
 
@@ -133,7 +133,7 @@
       </section>
 
       <section
-        class="work-history hide"
+        class="standard-planet hide"
         id="WORKHISTORY">
         <h2>Work History</h2>
         <p>
@@ -189,9 +189,8 @@
               Led frontend development for Mastercard projects, creating a
               dynamic tourism spending KPI dashboard. Also served as tech leader
               for a public web app displaying food consumption spending insights
-              at https://insights.mastercard.co.uk/app/home. Generated
-              actionable data visualization and added significant value for
-              clients leading to 89% of positive feedbacks.
+              . Generated actionable data visualization and added significant
+              value for clients leading to 89% of positive feedbacks.
             </li>
             <li>
               My role in both projects was to be part of the app development,
@@ -254,7 +253,7 @@
       </section>
 
       <section
-        class="blog hide"
+        class="standard-planet hide"
         id="BLOG">
         <h2>👩🏽‍🚀 Blog</h2>
 
@@ -266,7 +265,7 @@
       </section>
 
       <section
-        class="contact hide"
+        class="standard-planet hide"
         id="CONTACTS">
         <h2>CONTACTS</h2>
         <p>
@@ -277,20 +276,22 @@
         <h4></h4>
 
         <form
+          class="contact-form"
           action="https://formspree.io/f/meqbqgrw"
           method="POST">
-          <label>
-            Your email:
-            <input
-              type="email"
-              name="email" />
-          </label>
-          <label>
-            Your message:
-            <textarea name="message"></textarea>
-          </label>
+          <label> Your email: </label>
+          <input
+            type="email"
+            name="email" />
+
+          <label> Your message: </label>
+          <textarea
+            name="message"
+            rows="4"></textarea>
+
           <!-- your other form fields go here -->
           <button
+            class="send"
             id="test"
             type="submit">
             Send

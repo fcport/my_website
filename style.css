@@ -1,6 +1,10 @@
 @import url(https://fonts.googleapis.com/css?family=Aldrich);
 @import url(https://fonts.googleapis.com/css?family=Poppins);
 
+body {
+  overflow-y: hidden;
+}
+
 canvas {
   position: fixed;
   top: 0;
@@ -26,6 +30,24 @@ canvas {
   background-color: transparent;
   opacity: 1;
   transition: opacity 3.5s;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  min-height: 30vh;
+  justify-content: space-around;
+}
+.send {
+  margin: 3%;
+  margin-top: 25px;
+}
+
+textarea,
+input {
+  font-family: Poppins;
+  border-radius: 15px;
+  padding: 5px;
 }
 
 .presentation {
@@ -64,20 +86,7 @@ header {
   display: flex;
   flex-direction: column;
 }
-
-.about-me {
-  grid-column: 7/12;
-}
-
-.education {
-  grid-column: 7/12;
-}
-
-.work-history {
-  grid-column: 7/12;
-}
-
-.blog {
+.standard-planet {
   grid-column: 7/12;
 }
 
@@ -87,6 +96,13 @@ section {
   padding: 3vw 3vh;
   font-family: Poppins;
   border-radius: 10px;
+  max-height: 63vh;
+  overflow-y: scroll;
+  margin-top: 3vh;
+}
+
+a {
+  color: #fff;
 }
 
 button {
@@ -102,6 +118,11 @@ button {
   padding-bottom: 5%;
   height: fit-content;
   cursor: pointer;
+  transition: box-shadow 1s;
+}
+button:hover {
+  box-shadow: 0 0 0.1rem #fff, 0 0 0.1rem #fff, 0 0 1rem #fff, 0 0 0.8rem #fff,
+    0 0 1.8rem #fff, inset 0 0 0.3rem #fff;
 }
 
 .ready {
@@ -138,21 +159,8 @@ button.back::before {
     grid-column: 2/6;
     font-family: Poppins;
   }
-
-  .about-me {
-    grid-column: 4/13;
-  }
-
-  .education {
-    grid-column: 4/13;
-  }
-
-  .work-history {
-    grid-column: 4/13;
-  }
-
-  .blog {
-    grid-column: 4/13;
+  .standard-planet {
+    grid-column: 4/12;
   }
 }
 
@@ -162,32 +170,32 @@ button.back::before {
     font-family: Poppins;
     display: flex;
     flex-direction: column;
-    height: 100vh;
   }
   .presentation {
     font-size: 1.8em;
   }
-  .about-me {
-    grid-column: 2/12;
+
+  #CONTACTS p {
+    font-size: 0.8em;
   }
 
-  .education {
-    grid-column: 2/12;
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    min-height: 30vh;
+    justify-content: space-around;
+    font-size: 0.8em;
   }
 
-  .work-history {
-    grid-column: 2/12;
+  .standard-planet {
+    grid-column: 4/12;
   }
 
-  .blog {
-    grid-column: 2/12;
+  .back {
+    grid-column: 1/4;
+    margin-top: 5vh;
+    cursor: pointer;
   }
-  /* .ready {
-    position: absolute;
-    top: 50%;
-    left: 42%;
-     z-index: 999; 
-  } */
 }
 
 @media only screen and (max-width: 491px) {
@@ -196,7 +204,6 @@ button.back::before {
     font-family: Poppins;
     display: flex;
     flex-direction: column;
-    height: 100vh;
   }
   header p {
     font-size: 1em;
@@ -215,11 +222,10 @@ button.back::before {
 
 @media only screen and (max-width: 320px) {
   header {
-    grid-column: 2/12;
+    grid-column: 3/12;
     font-family: Poppins;
     display: flex;
     flex-direction: column;
-    height: 100vh;
   }
   p {
     font-size: 0.9em;
