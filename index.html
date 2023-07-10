@@ -52,16 +52,18 @@
         </button>
       </header>
 
-      <button
-        class="back hide"
-        id="back">
-        Back
-      </button>
-
       <section
         class="standard-planet hide"
         id="ABOUTME">
-        <h2>About Me</h2>
+        <span class="section-title">
+          <h2>About Me</h2>
+          <button
+            class="back hide"
+            id="back_ABOUTME">
+            Back
+          </button>
+        </span>
+
         <div>
           <div>
             <span> Name: </span>
@@ -79,16 +81,25 @@
             <span> About Me: </span>
             <span>
               I'm a Frontend passionate developer, based in Italy who loves to
-              code and create engaging and pleasant user experiences. Always
-              ready for new challenges I have been programming since I was 12
-              when my father handed me a book about HTML sbasics, and I have
-              loved doing it since then! When I'm not coding I'm probably
-              working out or practicing Kung Fu (pak hok pai). Currently working
-              at
+              code and create engaging and pleasant user experiences and
+              especially loves
+              <img
+                src="./assets/icons/angular.png"
+                style="height: 24px"
+                alt="" />
+              Angular . Always ready for new challenges I have been programming
+              since I was 12 when my father handed me a book about HTML sbasics,
+              and I have loved doing it since then! When I'm not coding I'm
+              probably working out or practicing Kung Fu (pak hok pai).
+              Currently working at
               <a
                 href="https://www.globant.com/"
-                target="_blank"
-                >Globant</a
+                target="_blank">
+                <img
+                  src="./assets/icons/globant.png"
+                  style="height: 12px"
+                  alt="" />
+                Globant</a
               >
               as a Senior Frontend Engineer!
             </span>
@@ -99,7 +110,14 @@
       <section
         class="standard-planet hide"
         id="EDU">
-        <h2>Education and Courses</h2>
+        <span class="section-title">
+          <h2>Education and Courses</h2>
+          <button
+            class="back hide"
+            id="back_EDU">
+            Back
+          </button>
+        </span>
 
         <h4>Bachelor's Degree in Computer Science - Universitas Mercatorum</h4>
 
@@ -135,7 +153,15 @@
       <section
         class="standard-planet hide"
         id="WORKHISTORY">
-        <h2>Work History</h2>
+        <span class="section-title">
+          <h2>Work History</h2>
+          <button
+            class="back hide"
+            id="back_WORKHISTORY">
+            Back
+          </button>
+        </span>
+
         <p>
           Welcome to my Work History section! I am a passionate Frontend
           Developer with over 6 years of hands-on coding experience,
@@ -145,16 +171,32 @@
           developer has been driven by a relentless thirst for knowledge and a
           strong desire to push the boundaries of what's possible in web
           development. Currently, I am proud to be a part of the talented team
-          at Globant, where I continue to grow, contribute, and innovate in the
+          at
+          <a
+            href="https://www.globant.com/"
+            target="_blank">
+            <img
+              src="./assets/icons/globant.png"
+              style="height: 12px"
+              alt="" />
+            Globant</a
+          >, where I continue to grow, contribute, and innovate in the
           ever-evolving world of technology.
         </p>
         <p>
           My work history has always been almost exclusively located in Italy,
-          but I'm hoping in the future to be able to work outside my native land
-          and explore and live different work cultures ❤️
+          but I'm hoping in the futsure to be able to work outside my native
+          land and explore and live different work cultures ❤️
         </p>
 
-        <h3>Globant</h3>
+        <span class="job-header">
+          <span class="job-title-date">
+            <div>Globant</div>
+            <div>02/23 - ongoing</div>
+          </span>
+          <div>Senior Angular Developer</div>
+        </span>
+
         <div>
           <ul>
             <li>
@@ -178,7 +220,13 @@
           </ul>
         </div>
 
-        <h3>Hyntelo</h3>
+        <span class="job-header">
+          <span class="job-title-date">
+            <div>Hyntelo</div>
+            <div>09/22 – 02/23</div>
+          </span>
+          <div>Angular Developer</div>
+        </span>
         <div>
           <ul>
             <li>
@@ -205,7 +253,16 @@
             </li>
           </ul>
         </div>
-        <h3>I-Tel</h3>
+
+        <span class="job-header">
+          <span class="job-title-date">
+            <div>I-Tel</div>
+            <div>02/21 - 09/22</div>
+          </span>
+
+          <div>Angular Developer</div>
+        </span>
+
         <div>
           <ul>
             <li>
@@ -221,7 +278,16 @@
             </li>
           </ul>
         </div>
-        <h3>NTS Informatica</h3>
+
+        <span class="job-header">
+          <span class="job-title-date">
+            <div>NTS Informatica</div>
+            <div>01/20 - 02/21</div>
+          </span>
+
+          <div>Fullstack Developer</div>
+        </span>
+
         <div>
           <ul>
             <li>
@@ -239,23 +305,46 @@
             </li>
           </ul>
         </div>
-        <h3>Quickestore.com</h3>
-        <div>
+
+        <span class="job-header">
+          <span class="job-title-date">
+            <div>Quickestore.com</div>
+            <div>04/18 - 11/18</div>
+          </span>
+
+          <div>Developer</div>
+        </span>
+        <p>
           Developed an e-commerce website for a Manchester based retail company.
           Tech stack: PHP, SQL, JavaScript, HTML, CSS, JQuery, CMS wordpress.
-        </div>
-        <h3>VapeUpStore.co.uk</h3>
-        <div>
+        </p>
+
+        <span class="job-header">
+          <span class="job-title-date">
+            <div>VapeUpStore.co.uk</div>
+            <div>01/17 - 02/18</div>
+          </span>
+
+          <div>Developer</div>
+        </span>
+        <p>
           Developed an e-commerce website for a Manchester based e-cigarette
           products retail company. Tech stack: PHP, SQL, JavaScript, HTML, CSS,
           JQuery, CMS wordpress.
-        </div>
+        </p>
       </section>
 
       <section
         class="standard-planet hide"
         id="BLOG">
-        <h2>👩🏽‍🚀 Blog</h2>
+        <span class="section-title">
+          <h2>👩🏽‍🚀 Blog</h2>
+          <button
+            class="back hide"
+            id="back_BLOG">
+            Back
+          </button>
+        </span>
 
         <p>
           While I'm creating my own blog website, I keep posting articles on
@@ -267,7 +356,15 @@
       <section
         class="standard-planet hide"
         id="CONTACTS">
-        <h2>CONTACTS</h2>
+        <span class="section-title">
+          <h2>CONTACTS</h2>
+          <button
+            class="back hide"
+            id="back_CONTACTS">
+            Back
+          </button>
+        </span>
+
         <p>
           You can contact me through my email or fill this form and I'll receive
           your message!
@@ -275,10 +372,7 @@
 
         <h4></h4>
 
-        <form
-          class="contact-form"
-          action="https://formspree.io/f/meqbqgrw"
-          method="POST">
+        <div class="contact-form">
           <label> Your email: </label>
           <input
             type="email"
@@ -292,11 +386,10 @@
           <!-- your other form fields go here -->
           <button
             class="send"
-            id="test"
-            type="submit">
+            id="send">
             Send
           </button>
-        </form>
+        </div>
       </section>
 
       <footer>
@@ -305,19 +398,26 @@
           <div>contact@federicocasadei.dev</div>
         </span>
         <span>
-          <img
-            src="./assets/icons/github.png"
-            alt="github"
-            class="icon" />
+          <a href="https://github.com/fcport">
+            <img
+              src="./assets/icons/github.png"
+              alt="github"
+              class="icon"
+          /></a>
 
-          <img
-            src="./assets/icons/linkedin.png"
-            alt="linkedin"
-            class="icon" />
-          <img
-            src="./assets/icons/twitter.png"
-            alt="twitter"
-            class="icon" />
+          <a href="https://www.linkedin.com/in/federico-casadei-8b572b1b8/">
+            <img
+              src="./assets/icons/linkedin.png"
+              alt="linkedin"
+              class="icon"
+          /></a>
+
+          <a href="https://twitter.com/fedecdev">
+            <img
+              src="./assets/icons/twitter.png"
+              alt="twitter"
+              class="icon"
+          /></a>
         </span>
       </footer>
     </main>

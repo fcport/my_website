@@ -358,7 +358,9 @@ let currentSection;
 function openSection(section) {
   currentSection = section;
   document.querySelector(`#${section}`).classList.remove("hide");
-  document.querySelector(`#back`).classList.remove("hide");
+  document
+    .querySelector(`#${section} span #back_${currentSection}`)
+    .classList.remove("hide");
 
   document.querySelector("header").classList.add("hide");
   document.querySelector("main").classList.add("height-full");
@@ -369,7 +371,7 @@ function back() {
   currentClicked = null;
   // coordinatesToReach = null;
   document.querySelector(`#${currentSection}`).classList.add("hide");
-  document.querySelector(`#back`).classList.add("hide");
+  document.querySelector(`#back_${currentSection}`).classList.add("hide");
   document.querySelector("header").classList.remove("hide");
   document.querySelector("main").classList.remove("height-full");
 
@@ -380,10 +382,6 @@ function back() {
 let travelFinished = false;
 function ready() {
   console.log("ready to launch");
-  // labelsFunctions.addLabelToObject(aboutMe, 2000, 300, "ABOUT ME");
-  // labelsFunctions.addLabelToObject(education, 2000, 300, "EDUCATION");
-  // labelsFunctions.addLabelToObject(blog, 2000, 300, "BLOG");
-  // labelsFunctions.addLabelToObject(workHistory, 2000, 300, "WORK HISTORY");
   document.querySelector(`#ready`).classList.add("hide");
   const body = document.querySelector(`.hyperspace`);
   body.style.opacity = "0";
@@ -411,8 +409,14 @@ function ready() {
   }, 4000);
 }
 
-document.getElementById("back").addEventListener("click", () => back());
+document
+  .querySelectorAll("[id*='back']")
+  .forEach((el) => el.addEventListener("click", () => back()));
+
 document.getElementById("ready").addEventListener("click", () => ready());
+document
+  .getElementById("send")
+  .addEventListener("click", () => contactFormSubmission());
 window.addEventListener("resize", onWindowResize, false);
 
 function onWindowResize() {
@@ -420,4 +424,15 @@ function onWindowResize() {
   camera.updateProjectionMatrix();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+async function contactFormSubmission() {
+  const email = document.querySelector("input[name='email']").value;
+  const message = document.querySelector("textarea[name='message']").value;
+  console.log(email, message);
+  const res = await fetch("https://formspree.io/f/meqbqgrw", {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify({ email, message }),
+  }).then((res) => console.log(res));
 }
