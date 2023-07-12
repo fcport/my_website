@@ -173,7 +173,8 @@ function init() {
   scene.add(sun, educationObj);
   educationObj.add(education, saturnRings);
 
-  education.onMouseHover = function () {S
+  education.onMouseHover = function () {
+    S;
     return "education";
   };
 
@@ -181,7 +182,7 @@ function init() {
     openSection("EDU");
   };
   education.onReadyClicked = function () {
-    labelsFunctions.addLabelToObject(education, 2000, 300, 'EDUCATION');
+    labelsFunctions.addLabelToObject(education, 2000, 300, "EDUCATION");
   };
 
   planets.push({
@@ -299,6 +300,7 @@ function animate() {
   }
 
   education.rotateY(0.0035);
+  sun.rotateY(0.0005);
 
   if (readyClicked && !travelFinished) {
     for (let i = 0; i < vertices.positions.length; i += 3) {
