@@ -64,7 +64,10 @@ function createPlanet(
   planet.onClick = function () {
     openSection(id);
   };
-  labelsFunctions.addLabelToObject(planet, 2000, 300, name);
+
+  planet.onReadyClicked = function () {
+    labelsFunctions.addLabelToObject(planet, 2000, 300, name);
+  };
 
   planets.push({
     planet: planet,
@@ -170,12 +173,15 @@ function init() {
   scene.add(sun, educationObj);
   educationObj.add(education, saturnRings);
 
-  education.onMouseHover = function () {
+  education.onMouseHover = function () {S
     return "education";
   };
 
   education.onClick = function () {
     openSection("EDU");
+  };
+  education.onReadyClicked = function () {
+    labelsFunctions.addLabelToObject(education, 2000, 300, 'EDUCATION');
   };
 
   planets.push({
@@ -184,7 +190,6 @@ function init() {
     rotationSpeed: 0.0035,
     objTurningSpeed: 0.0035,
   });
-  labelsFunctions.addLabelToObject(education, 2000, 300, "EDUCATION");
 
   const pointLight = new THREE.PointLight(0xffffff, 2, 300);
   //the sun shall be the point of light
@@ -382,6 +387,9 @@ function back() {
 let travelFinished = false;
 function ready() {
   console.log("ready to launch");
+  planets.forEach((p) => {
+    if (p.planet.onReadyClicked) p.planet.onReadyClicked();
+  });
   document.querySelector(`#ready`).classList.add("hide");
   const body = document.querySelector(`.hyperspace`);
   body.style.opacity = "0";
