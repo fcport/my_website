@@ -192,7 +192,7 @@ button.back::before {
 
 @media only screen and (max-width: 768px) {
   header {
-    grid-column: 1/10;
+    grid-column: 2/10;
     font-family: Poppins;
     display: flex;
     flex-direction: column;
@@ -226,7 +226,7 @@ button.back::before {
 
 @media only screen and (max-width: 491px) {
   header {
-    grid-column: 1/12;
+    grid-column: 2/12;
     font-family: Poppins;
     display: flex;
     flex-direction: column;
@@ -248,7 +248,7 @@ button.back::before {
 
 @media only screen and (max-width: 425px) {
   header {
-    grid-column: 3/12;
+    grid-column: 2/12;
     font-family: Poppins;
     display: flex;
     flex-direction: column;
@@ -271,7 +271,7 @@ button.back::before {
 
 @media only screen and (max-width: 320px) {
   header {
-    grid-column: 3/12;
+    grid-column: 2/12;
     font-family: Poppins;
     display: flex;
     flex-direction: column;
