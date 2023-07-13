@@ -27,6 +27,9 @@ let planets = [];
 
 let readyClicked = false;
 const manager = new THREE.LoadingManager();
+
+const dialogRef = document.querySelector("#thxDialog");
+
 manager.onProgress = function (url, itemsLoaded, itemsTotal) {
   const loader = document.querySelector("#progress");
   loader.value = (100 * itemsLoaded) / itemsTotal;
@@ -365,6 +368,11 @@ let currentSection;
 function openSection(section) {
   currentSection = section;
   document.querySelector(`#${section}`).classList.remove("hide");
+  setTimeout(() => {
+    document.querySelector(`#${currentSection}`).classList.toggle("grow");
+  }, 10);
+  // document.querySelector(`#${currentSection}`).classList.toggle("grow");
+
   document
     .querySelector(`#${section} span #back_${currentSection}`)
     .classList.remove("hide");
@@ -377,6 +385,7 @@ function back() {
   controls.reset();
   currentClicked = null;
   // coordinatesToReach = null;
+  document.querySelector(`#${currentSection}`).classList.toggle("grow");
   document.querySelector(`#${currentSection}`).classList.add("hide");
   document.querySelector(`#back_${currentSection}`).classList.add("hide");
   document.querySelector("header").classList.remove("hide");
@@ -423,6 +432,10 @@ document
   .querySelectorAll("[id*='back']")
   .forEach((el) => el.addEventListener("click", () => back()));
 
+document.querySelector("#thxDialog button").addEventListener("click", () => {
+  dialogRef.close();
+});
+
 document.getElementById("ready").addEventListener("click", () => ready());
 document
   .getElementById("send")
@@ -442,7 +455,9 @@ async function contactFormSubmission() {
   console.log(email, message);
   const res = await fetch("https://formspree.io/f/meqbqgrw", {
     method: "POST",
-    mode: "no-cors",
     body: JSON.stringify({ email, message }),
-  }).then((res) => console.log(res));
+    mode: "no-cors",
+  }).then((res) => {
+    dialogRef.showModal();
+  });
 }

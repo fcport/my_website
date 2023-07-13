@@ -1,6 +1,28 @@
 @import url(https://fonts.googleapis.com/css?family=Aldrich);
 @import url(https://fonts.googleapis.com/css?family=Poppins);
 
+/* ===== Scrollbar CSS ===== */
+/* Firefox */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #f0f0f0 #000000;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 11px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  border: 3px solid #ffffff;
+}
+
 body {
   overflow-y: hidden;
 }
@@ -9,6 +31,13 @@ canvas {
   position: fixed;
   top: 0;
   left: 0;
+}
+
+#thxDialog {
+  color: #fff;
+  font-family: Poppins;
+  background-color: rgba(0, 0, 0, 1);
+  border-radius: 10px;
 }
 
 .loading {
@@ -55,7 +84,8 @@ canvas {
   justify-content: space-between;
   align-items: center;
   font-weight: bold;
-  padding: 1.5vw 0;
+  padding: 0.5vw 0;
+  margin-top: 15px;
 }
 .underline {
   text-decoration: underline;
@@ -116,14 +146,20 @@ header {
 }
 
 section {
+  display: block;
   background-color: rgba(0, 0, 0, 0.97);
   height: fit-content;
   padding: 3vw 3vh;
   font-family: Poppins;
   border-radius: 10px;
-  max-height: 63vh;
+  max-height: 0vh;
   overflow-y: auto;
   margin-top: 3vh;
+  transition: max-height 3s;
+}
+
+section.grow {
+  max-height: 63vh;
 }
 
 a {
