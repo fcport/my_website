@@ -23,6 +23,8 @@ let mouse = new THREE.Vector2();
 let currentIntersections = [];
 let currentClicked;
 
+let messageSent = false;
+
 let planets = [];
 
 let readyClicked = false;
@@ -434,6 +436,16 @@ document
 
 document.querySelector("#thxDialog button").addEventListener("click", () => {
   dialogRef.close();
+  back();
+  const email = document.querySelector("input[name='email']");
+  const message = document.querySelector("textarea[name='message']");
+
+  email.value = "";
+  message.value = "";
+
+  email.disabled = true;
+  message.disabled = true;
+  document.querySelector("#send").disabled = true;
 });
 
 document.getElementById("ready").addEventListener("click", () => ready());
@@ -452,6 +464,14 @@ function onWindowResize() {
 async function contactFormSubmission() {
   const email = document.querySelector("input[name='email']").value;
   const message = document.querySelector("textarea[name='message']").value;
+  if (email === "" || message === "") {
+    alert("Invalid form!");
+    return;
+  }
+  if (messageSent) {
+    document.querySelector("#contactError").innerHTML =
+      "I received your previous message! I'll get back at you as soon as possible! 🚀";
+  }
   console.log(email, message);
   const res = await fetch("https://formspree.io/f/meqbqgrw", {
     method: "POST",
