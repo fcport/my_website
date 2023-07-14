@@ -161,7 +161,7 @@ section {
   max-height: 0vh;
   overflow-y: auto;
   margin-top: 3vh;
-  transition: max-height 3s;
+  transition: max-height 3s ease-in;
 }
 
 section.grow {
