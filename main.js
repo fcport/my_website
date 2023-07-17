@@ -423,7 +423,7 @@ function ready() {
     camera.position.setY(50);
     document.querySelector(`#instruction`).innerHTML =
       "Click on any planet to know more about the selected section 🚀";
-  }, 3500);
+  }, 2500);
   setTimeout(() => {
     travelFinished = true;
     scene.remove(stars);

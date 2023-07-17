@@ -64,7 +64,7 @@ canvas {
 .hyperspace {
   background-color: transparent;
   opacity: 1;
-  transition: opacity 3.5s;
+  transition: opacity 2.5s;
 }
 
 .contact-form {
@@ -161,7 +161,7 @@ section {
   max-height: 0vh;
   overflow-y: auto;
   margin-top: 3vh;
-  transition: max-height 3s ease-in;
+  transition: max-height 2s;
 }
 
 section.grow {
