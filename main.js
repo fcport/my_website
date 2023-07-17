@@ -427,7 +427,7 @@ function ready() {
   setTimeout(() => {
     travelFinished = true;
     scene.remove(stars);
-  }, 4000);
+  }, 3000);
 }
 
 document
