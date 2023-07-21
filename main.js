@@ -112,16 +112,16 @@ function init() {
     "ABOUTME",
     0.0025,
     0.0025,
-    "./assets/hearth.jpg",
+    "./assets/hearth.webp",
     30
   );
-  createPlanet("BLOG", "BLOG", 0.0015, 0.0015, "./assets/mars.jpg", 70);
+  createPlanet("BLOG", "BLOG", 0.0015, 0.0015, "./assets/mars.webp", 70);
   createPlanet(
     "WORK HISTORY",
     "WORKHISTORY",
     0.0005,
     0.0005,
-    "./assets/venus.jpg",
+    "./assets/venus.webp",
     90
   );
 
@@ -130,7 +130,7 @@ function init() {
     "CONTACTS",
     0.0007,
     0.0007,
-    "./assets/jupiter.jpg",
+    "./assets/jupiter.webp",
     110
   );
 
@@ -139,14 +139,14 @@ function init() {
 
   const geometrySaturnRings = new THREE.RingGeometry(8, 10, 32);
 
-  const sunTexture = new THREE.TextureLoader(manager).load("./assets/sun.jpg");
+  const sunTexture = new THREE.TextureLoader(manager).load("./assets/sun.webp");
 
   const educationTexture = new THREE.TextureLoader(manager).load(
-    "./assets/saturn.jpg"
+    "./assets/saturn.webp"
   );
 
   const saturnRingsTexture = new THREE.TextureLoader(manager).load(
-    "./assets/saturn-rings.png"
+    "./assets/saturn-rings.webp"
   );
 
   const materialSun = new THREE.MeshBasicMaterial({
@@ -211,7 +211,7 @@ function init() {
     .forEach((_) => addStars(scene));
 
   const spaceTextue = new THREE.TextureLoader(manager).load(
-    "./assets/space.jpg"
+    "./assets/space.webp"
   );
   scene.background = spaceTextue;
   animate();
