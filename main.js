@@ -115,7 +115,14 @@ function init() {
     "./assets/hearth.webp",
     30
   );
-  createPlanet("BLOG", "BLOG", 0.0015, 0.0015, "./assets/mars.webp", 70);
+  createPlanet(
+    "BLOG AND PROJECTS",
+    "BLOG",
+    0.0015,
+    0.0015,
+    "./assets/mars.webp",
+    70
+  );
   createPlanet(
     "WORK HISTORY",
     "WORKHISTORY",
