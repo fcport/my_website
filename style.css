@@ -97,6 +97,12 @@ canvas {
   text-decoration: underline;
 }
 
+/* Poppins ships no kana or kanji, so give japanese text a font that does */
+[lang="ja"] {
+  font-family: "Yu Gothic", "Hiragino Sans", "Noto Sans JP", "Meiryo",
+    "MS PGothic", Poppins, sans-serif;
+}
+
 .section-title {
   display: flex;
   flex-direction: row;

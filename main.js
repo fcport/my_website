@@ -217,10 +217,14 @@ function init() {
     .fill()
     .forEach((_) => addStars(scene));
 
-  const spaceTextue = new THREE.TextureLoader(manager).load(
+  const spaceTexture = new THREE.TextureLoader(manager).load(
     "./assets/space.webp"
   );
-  scene.background = spaceTextue;
+  // the background is drawn as a full screen quad, so the panorama gets
+  // resampled by whatever the window aspect happens to be. anisotropic
+  // filtering keeps the pinpoint stars from being averaged into blurs.
+  spaceTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  scene.background = spaceTexture;
   animate();
 
   window.addEventListener("click", onDocumentMouseDown);
