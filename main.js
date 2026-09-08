@@ -294,28 +294,42 @@ function onDocumentMouseMove(event) {
   currentIntersections = raycaster.intersectObjects(scene.children);
 }
 
+// the planet whose section is open holds still, both its orbit and its spin,
+// so the camera is not chasing a moving target while you read
+function isOpened(el) {
+  return currentClicked === el.planet;
+}
+
+// hovering a planet only pauses its orbit, as a hint that it is clickable
+function isHovered(el) {
+  return (
+    !currentClicked &&
+    currentIntersections &&
+    currentIntersections.length > 0 &&
+    scene.getObjectById(currentIntersections[0].object.id).parent.id ===
+      el.revolutionObj.id
+  );
+}
+
 function animate() {
   requestAnimationFrame(animate);
   controls.update();
   renderer.render(scene, camera);
-  planets
-    .filter((el) =>
-      currentIntersections && currentIntersections.length > 0 && !currentClicked
-        ? scene.getObjectById(currentIntersections[0].object.id).parent.id !==
-          el.revolutionObj.id
-        : true
-    )
-    .forEach((el) => {
-      if (el.objTurningSpeed) el.revolutionObj.rotateY(el.objTurningSpeed);
-    });
 
-  planets.forEach((e) => e.planet.rotateY(e.rotationSpeed));
+  planets.forEach((el) => {
+    if (isOpened(el)) return;
+    if (el.objTurningSpeed && !isHovered(el)) {
+      el.revolutionObj.rotateY(el.objTurningSpeed);
+    }
+    el.planet.rotateY(el.rotationSpeed);
+  });
 
   if (!!currentClicked) {
     makeCameraFollowObject(currentClicked);
   }
 
-  education.rotateY(0.0035);
+  // education sits in `planets` too, so this is its second, faster spin
+  if (currentClicked !== education) education.rotateY(0.0035);
   sun.rotateY(0.0005);
 
   if (readyClicked && !travelFinished) {
