@@ -19,18 +19,23 @@
   box-sizing: border-box;
 }
 
-/* ===== scrollbars ===== */
-* {
+/* ===== scrollbars =====
+   scoped to the one element that actually scrolls its own content: the panel
+   beside the solar system on a desktop. applying this to `*` also dressed the
+   page scrollbar, and naming a scrollbar-color turns a phone's overlay bar,
+   which normally fades away, into a permanent white stripe down the edge of
+   the screen. everything else keeps the platform's own. */
+.panel {
   scrollbar-width: thin;
   scrollbar-color: #f0f0f0 #000000;
 }
-*::-webkit-scrollbar {
+.panel::-webkit-scrollbar {
   width: 10px;
 }
-*::-webkit-scrollbar-track {
+.panel::-webkit-scrollbar-track {
   background: #000000;
 }
-*::-webkit-scrollbar-thumb {
+.panel::-webkit-scrollbar-thumb {
   background-color: #f0f0f0;
   border-radius: 10px;
   border: 2px solid #000000;
