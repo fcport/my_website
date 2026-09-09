@@ -1,68 +1,51 @@
-import "./style.css";
 import * as THREE from "three";
 
-function makeLabelCanvas(labelWidth, fontSize, name) {
-  const borderSize = 2;
+// how tall a label stands in world units. a planet has radius 3, so this
+// keeps the caption legible without swallowing the thing it names.
+const LABEL_HEIGHT = 3.2;
+
+function makeLabelCanvas(fontSize, name) {
   const canvas = document.createElement("canvas");
-  // canvas.style.font(`${fontSize}px Aldrich`);
   const ctx = canvas.getContext("2d");
-  const font = `${fontSize}px Aldrich, Poppins`;
+  const font = `${fontSize}px Aldrich, Poppins, sans-serif`;
+
   ctx.font = font;
-  // measure how long the name will be
-  const textWidth = ctx.measureText(name).width;
+  const textWidth = Math.ceil(ctx.measureText(name).width);
 
-  const doubleBorderSize = borderSize * 2;
-  const width = labelWidth + doubleBorderSize;
-  const height = fontSize + doubleBorderSize;
-  ctx.canvas.width = width;
-  ctx.canvas.height = height;
+  // sizing the canvas to the text, rather than to a fixed width, is what
+  // keeps a short label from getting the same sprite footprint as a long one
+  canvas.width = textWidth + fontSize;
+  canvas.height = Math.ceil(fontSize * 1.4);
 
-  // need to set font sagain after resizing canvas
-
+  // the canvas resize above resets the 2d context, so restate the font
   ctx.font = font;
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
-
-  ctx.fillStyle = "transparent";
-
-  // scale to fit but don't stretch
-  const scaleFactor = Math.min(1, labelWidth / textWidth);
-  ctx.translate(width / 2, height / 2);
-  ctx.scale(scaleFactor, 1);
   ctx.fillStyle = "white";
-  ctx.fillText(name, 0, 0);
+  ctx.fillText(name, canvas.width / 2, canvas.height / 2);
 
-  return ctx.canvas;
+  return canvas;
 }
 
-function addLabelToObject(obj, labelSizeWidth, size, nameToDisplay) {
-  const canvas = makeLabelCanvas(labelSizeWidth, size, nameToDisplay);
+function addLabelToObject(obj, fontSize, nameToDisplay) {
+  const canvas = makeLabelCanvas(fontSize, nameToDisplay);
   const texture = new THREE.CanvasTexture(canvas);
 
-  // because our canvas is likely not a power of 2
-  // in both dimensions set the filtering appropriately.
+  // the canvas is not a power of two in either dimension
   texture.minFilter = THREE.LinearFilter;
   texture.wrapS = THREE.ClampToEdgeWrapping;
   texture.wrapT = THREE.ClampToEdgeWrapping;
-  const labelMaterial = new THREE.SpriteMaterial({
-    map: texture,
-    transparent: true,
-  });
-  // const root = new THREE.Object3D();
-  // root.position.x = obj.position.x;
 
-  const label = new THREE.Sprite(labelMaterial);
-  label.position.x = 0;
-  label.position.y = 7;
-  label.position.z = 0;
+  const label = new THREE.Sprite(
+    new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false })
+  );
 
-  //if units are meters then 0.01 here makes size
-  // of the label into centimeters.
-  const labelBaseScale = 0.01;
-  label.scale.x = canvas.width * labelBaseScale;
-  label.scale.y = canvas.height * labelBaseScale;
+  label.position.set(0, 5.4, 0);
+  label.scale.set(LABEL_HEIGHT * (canvas.width / canvas.height), LABEL_HEIGHT, 1);
+  label.renderOrder = 1;
 
   obj.add(label);
+  return label;
 }
 
 export default { addLabelToObject, makeLabelCanvas };

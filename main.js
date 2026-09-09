@@ -1,508 +1,298 @@
 import "./style.css";
-import * as THREE from "three";
-import gsap from "gsap";
-import labelsFunctions from "./labels";
-import { addStars } from "./stars";
 
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+const SECTION_IDS = ["ABOUTME", "WORKHISTORY", "BLOG", "EDU", "CONTACTS"];
 
-let scene,
-  camera,
-  renderer,
-  controls,
-  sun,
-  education,
-  saturnRings,
-  educationObj,
-  vertices,
-  starBox,
-  stars;
+// reloading a deep link put the browser's remembered scroll offset in a race
+// with the jump to the top of the reopened panel, and the offset usually won
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 
-let raycaster = new THREE.Raycaster();
-let mouse = new THREE.Vector2();
-let currentIntersections = [];
-let currentClicked;
+const reducedMotion = window.matchMedia(
+  "(prefers-reduced-motion: reduce)"
+).matches;
 
-let messageSent = false;
+const connection = navigator.connection || {};
+const frugal =
+  connection.saveData === true || /(^|-)2g$/.test(connection.effectiveType || "");
 
-let planets = [];
+// the solar system is scenery everywhere, but it is only the navigation on a
+// pointer. phones get the same sky, orbiting and zooming, with nothing to aim
+// at: the buttons do that job, and a 40px fingertip never had a chance against
+// a 20px planet.
+const wantsSpace = !reducedMotion && !frugal && supportsWebGL();
 
-let readyClicked = false;
-const manager = new THREE.LoadingManager();
+let space = null;
+let openSectionId = null;
+let lastFocusedTrigger = null;
 
-const dialogRef = document.querySelector("#thxDialog");
+const nav = document.querySelector(".section-nav");
+const canvas = document.querySelector("#bg");
 
-manager.onProgress = function (url, itemsLoaded, itemsTotal) {
-  const loader = document.querySelector("#progress");
-  loader.value = (100 * itemsLoaded) / itemsTotal;
-};
-
-manager.onLoad = function () {
-  console.log("Loading complete!");
-  const loader = document.querySelector(".loading");
-  loader.remove();
-};
-
-function createPlanet(
-  name,
-  id,
-  rotationSpeed,
-  objTurningSpeed,
-  texturePath,
-  positionX
-) {
-  const geometry = new THREE.SphereGeometry(3);
-  const texture = new THREE.TextureLoader(manager).load(texturePath);
-
-  const material = new THREE.MeshStandardMaterial({
-    map: texture,
-  });
-
-  const planet = new THREE.Mesh(geometry, material);
-  planet.position.set(positionX, 0, 0);
-  const revolutionObj = new THREE.Object3D();
-  scene.add(revolutionObj);
-  revolutionObj.add(planet);
-  planet.onMouseHover = function () {
-    return name;
-  };
-  planet.onClick = function () {
-    openSection(id);
-  };
-
-  planet.onReadyClicked = function () {
-    labelsFunctions.addLabelToObject(planet, 2000, 300, name);
-  };
-
-  planets.push({
-    planet: planet,
-    revolutionObj: revolutionObj,
-    rotationSpeed,
-    objTurningSpeed,
-  });
-}
-
-function init() {
-  scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(
-    65,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    500
-  );
-
-  //the object that draws
-  renderer = new THREE.WebGLRenderer({
-    canvas: document.querySelector("#bg"),
-  });
-
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  // I want to start the view from a slightly higher point
-  camera.position.setX(800);
-  camera.position.setY(650);
-  camera.position.setZ(1500);
-  // camera.rotation.z = Math.PI / 2;
-
-  renderer.render(scene, camera);
-  createStarsBeginning();
-
-  createPlanet(
-    "ABOUT ME",
-    "ABOUTME",
-    0.0025,
-    0.0025,
-    "./assets/hearth.webp",
-    30
-  );
-  createPlanet(
-    "BLOG AND PROJECTS",
-    "BLOG",
-    0.0015,
-    0.0015,
-    "./assets/mars.webp",
-    70
-  );
-  createPlanet(
-    "WORK HISTORY",
-    "WORKHISTORY",
-    0.0005,
-    0.0005,
-    "./assets/venus.webp",
-    90
-  );
-
-  createPlanet(
-    "CONTACTS",
-    "CONTACTS",
-    0.0007,
-    0.0007,
-    "./assets/jupiter.webp",
-    110
-  );
-
-  const geometrySunCenter = new THREE.SphereGeometry(10);
-  const geometryeducation = new THREE.SphereGeometry(3);
-
-  const geometrySaturnRings = new THREE.RingGeometry(8, 10, 32);
-
-  const sunTexture = new THREE.TextureLoader(manager).load("./assets/sun.webp");
-
-  const educationTexture = new THREE.TextureLoader(manager).load(
-    "./assets/saturn.webp"
-  );
-
-  const saturnRingsTexture = new THREE.TextureLoader(manager).load(
-    "./assets/saturn-rings.webp"
-  );
-
-  const materialSun = new THREE.MeshBasicMaterial({
-    map: sunTexture,
-  });
-
-  const materialEducation = new THREE.MeshStandardMaterial({
-    map: educationTexture,
-  });
-
-  const materialSaturnRings = new THREE.MeshBasicMaterial({
-    map: saturnRingsTexture,
-    side: THREE.DoubleSide,
-  });
-
-  sun = new THREE.Mesh(geometrySunCenter, materialSun);
-  education = new THREE.Mesh(geometryeducation, materialEducation);
-
-  saturnRings = new THREE.Mesh(geometrySaturnRings, materialSaturnRings);
-
-  sun.position.set(0, 0, 0);
-  education.position.set(50, 0, 0);
-
-  saturnRings.position.set(50, 0, 0);
-  saturnRings.rotation.x = 0.5 * Math.PI;
-
-  educationObj = new THREE.Object3D();
-
-  scene.add(sun, educationObj);
-  educationObj.add(education, saturnRings);
-
-  education.onMouseHover = function () {
-    S;
-    return "education";
-  };
-
-  education.onClick = function () {
-    openSection("EDU");
-  };
-  education.onReadyClicked = function () {
-    labelsFunctions.addLabelToObject(education, 2000, 300, "EDUCATION");
-  };
-
-  planets.push({
-    planet: education,
-    revolutionObj: educationObj,
-    rotationSpeed: 0.0035,
-    objTurningSpeed: 0.0035,
-  });
-
-  const pointLight = new THREE.PointLight(0xffffff, 2, 300);
-  //the sun shall be the point of light
-  pointLight.position.set(0, 0, 0);
-
-  //lights to illumate objects
-  scene.add(pointLight);
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.enabled = false;
-
-  Array(300)
-    .fill()
-    .forEach((_) => addStars(scene));
-
-  const spaceTexture = new THREE.TextureLoader(manager).load(
-    "./assets/space.webp"
-  );
-  // the background is drawn as a full screen quad, so the panorama gets
-  // resampled by whatever the window aspect happens to be. anisotropic
-  // filtering keeps the pinpoint stars from being averaged into blurs.
-  spaceTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
-  scene.background = spaceTexture;
-  animate();
-
-  window.addEventListener("click", onDocumentMouseDown);
-  window.addEventListener("mousemove", onDocumentMouseMove);
-}
-init();
-
-function createStarsBeginning() {
-  starBox = new THREE.BufferGeometry();
-  vertices = {
-    positions: [],
-  };
-  for (let i = 0; i < 3000; i++) {
-    vertices.positions.push(Math.random() * 1000 + 400);
-  }
-  starBox.setAttribute(
-    "position",
-    new THREE.BufferAttribute(new Float32Array(vertices.positions), 3)
-  );
-
-  let starImage = new THREE.TextureLoader(manager).load(
-    "./assets/white-circle.png"
-  );
-  let starMaterial = new THREE.PointsMaterial({
-    size: 2,
-    map: starImage,
-    color: 0xffffff,
-    sizeAttenuation: true,
-  });
-
-  stars = new THREE.Points(starBox, starMaterial);
-
-  scene.add(stars);
-}
-
-function onDocumentMouseDown(event) {
-  // event.preventDefault();
-
-  // calculate pointer position in normalized device coordinates
-  // (-1 to +1) for both components
-  mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
-  mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
-
-  raycaster.setFromCamera(mouse, camera);
-
-  const intersects = raycaster.intersectObjects(scene.children);
-
-  if (
-    intersects.length > 0 &&
-    !currentClicked &&
-    intersects[0].object.onClick
-  ) {
-    intersects[0].object.onClick.call(intersects[0]);
-    currentClicked = intersects[0].object;
-  }
-}
-function onDocumentMouseMove(event) {
-  event.preventDefault();
-
-  // calculate pointer position in normalized device coordinates
-  // (-1 to +1) for both components
-  mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
-  mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
-
-  raycaster.setFromCamera(mouse, camera);
-
-  currentIntersections = raycaster.intersectObjects(scene.children);
-}
-
-// the planet whose section is open holds still, both its orbit and its spin,
-// so the camera is not chasing a moving target while you read
-function isOpened(el) {
-  return currentClicked === el.planet;
-}
-
-// hovering a planet only pauses its orbit, as a hint that it is clickable
-function isHovered(el) {
-  return (
-    !currentClicked &&
-    currentIntersections &&
-    currentIntersections.length > 0 &&
-    scene.getObjectById(currentIntersections[0].object.id).parent.id ===
-      el.revolutionObj.id
-  );
-}
-
-function animate() {
-  requestAnimationFrame(animate);
-  controls.update();
-  renderer.render(scene, camera);
-
-  planets.forEach((el) => {
-    if (isOpened(el)) return;
-    if (el.objTurningSpeed && !isHovered(el)) {
-      el.revolutionObj.rotateY(el.objTurningSpeed);
-    }
-    el.planet.rotateY(el.rotationSpeed);
-  });
-
-  if (!!currentClicked) {
-    makeCameraFollowObject(currentClicked);
-  }
-
-  // education sits in `planets` too, so this is its second, faster spin
-  if (currentClicked !== education) education.rotateY(0.0035);
-  sun.rotateY(0.0005);
-
-  if (readyClicked && !travelFinished) {
-    for (let i = 0; i < vertices.positions.length; i += 3) {
-      if (
-        vertices.positions[i] > 900 ||
-        vertices.positions[i + 1] > 800 ||
-        vertices.positions[i + 2] > 1500
-      ) {
-        vertices.positions[i] = Math.random() * 800 + 400;
-        vertices.positions[i + 1] = Math.random() * 600 + 300;
-        vertices.positions[i + 2] = Math.random() * 1500 + 750;
-      }
-      vertices.positions[i] += 2;
-      vertices.positions[i + 1] += 4;
-      vertices.positions[i + 2] += 4;
-    }
-
-    starBox.setAttribute(
-      "position",
-      new THREE.BufferAttribute(new Float32Array(vertices.positions), 3)
+function supportsWebGL() {
+  try {
+    const probe = document.createElement("canvas");
+    return !!(
+      window.WebGLRenderingContext &&
+      (probe.getContext("webgl") || probe.getContext("experimental-webgl"))
     );
+  } catch (error) {
+    return false;
   }
 }
 
-const size = new THREE.Vector3();
-const center = new THREE.Vector3();
-const box = new THREE.Box3();
+// ------------------------------------------------------------------ sections
 
-function makeCameraFollowObject(object) {
-  const fitOffset = 1.2;
-  box.makeEmpty();
-  box.expandByObject(object);
+// below this width a panel is a sheet over the lower part of the screen rather
+// than a column beside the header, which changes both what the panel covers
+// and where the focused planet has to sit to stay visible above it
+const sheetLayout = window.matchMedia("(max-width: 1100px)");
 
-  box.getSize(size);
-  box.getCenter(center);
-
-  const maxSize = Math.max(size.x, size.y, size.z);
-  const fitHeightDistance =
-    maxSize / (2 * Math.atan((Math.PI * camera.fov) / 360));
-  const fitWidthDistance = fitHeightDistance / camera.aspect;
-  const distance = fitOffset * Math.max(fitHeightDistance, fitWidthDistance);
-
-  const direction = controls.target
-    .clone()
-    .sub(camera.position)
-    .normalize()
-    .multiplyScalar(15);
-
-  direction.y += 10;
-
-  controls.maxDistance = distance * 10;
-  controls.target.copy(center);
-
-  camera.near = distance / 100;
-  camera.far = distance * 100;
-  camera.updateProjectionMatrix();
-
-  gsap.fromTo(camera.position, camera.position, direction).duration(2);
+// where the focused planet lands, as a fraction of the frustum from centre.
+// beside a column: low and to the left, clear of the text. under a sheet: high
+// and centred, in the band of sky the sheet leaves open.
+function planetFraming() {
+  return sheetLayout.matches ? { x: 0, y: 0.42 } : { x: -0.34, y: -0.32 };
 }
 
-let currentSection;
-function openSection(section) {
-  currentSection = section;
-  document.querySelector(`#${section}`).classList.remove("hide");
-  setTimeout(() => {
-    document.querySelector(`#${currentSection}`).classList.toggle("grow");
-  }, 10);
-  // document.querySelector(`#${currentSection}`).classList.toggle("grow");
+// at rest on a phone the system sits in the band of sky between the header and
+// the footer. measuring the band instead of using a fixed fraction of the
+// viewport is what keeps a bright sun off the text on a shorter screen.
+function homeScreenY() {
+  if (!sheetLayout.matches) return 0;
 
-  document
-    .querySelector(`#${section} span #back_${currentSection}`)
-    .classList.remove("hide");
+  const top = document.querySelector("header").getBoundingClientRect().bottom;
+  const bottom = document.querySelector("footer").getBoundingClientRect().top;
+  const half = window.innerHeight / 2;
+  const bandCentre = bottom > top ? (top + bottom) / 2 : half;
 
-  document.querySelector("header").classList.add("hide");
-  document.querySelector("main").classList.add("height-full");
+  return Math.max(-0.55, Math.min(0, -((bandCentre - half) / half)));
 }
 
-function back() {
-  controls.reset();
-  currentClicked = null;
-  // coordinatesToReach = null;
-  document.querySelector(`#${currentSection}`).classList.toggle("grow");
-  document.querySelector(`#${currentSection}`).classList.add("hide");
-  document.querySelector(`#back_${currentSection}`).classList.add("hide");
-  document.querySelector("header").classList.remove("hide");
-  document.querySelector("main").classList.remove("height-full");
-
-  const homeVector = new THREE.Vector3(30, 50, 150);
-  gsap.to(camera.position, homeVector).duration(2);
+function sectionEl(id) {
+  return document.getElementById(id);
 }
 
-let travelFinished = false;
-function ready() {
-  console.log("ready to launch");
-  planets.forEach((p) => {
-    if (p.planet.onReadyClicked) p.planet.onReadyClicked();
-  });
-  document.querySelector(`#ready`).classList.add("hide");
-  const body = document.querySelector(`.hyperspace`);
-  body.style.opacity = "0";
-  body.addEventListener(
-    "transitionend",
-    () => {
-      // After the transition to opacity 1 is complete, instantly set opacity back to 0
-      body.style.opacity = "1";
-    },
-    { once: true }
-  );
-
-  readyClicked = true;
-  setTimeout(() => {
-    controls.enabled = true;
-    camera.position.setZ(150);
-    camera.position.setX(30);
-    camera.position.setY(50);
-    document.querySelector(`#instruction`).innerHTML =
-      "Click on any planet to know more about the selected section 🚀";
-  }, 2500);
-  setTimeout(() => {
-    travelFinished = true;
-    scene.remove(stars);
-  }, 3000);
+function navLink(id) {
+  return document.querySelector(`.nav-link[data-section="${id}"]`);
 }
 
-document
-  .querySelectorAll("[id*='back']")
-  .forEach((el) => el.addEventListener("click", () => back()));
-
-document.querySelector("#thxDialog button").addEventListener("click", () => {
-  dialogRef.close();
-  back();
-  const email = document.querySelector("input[name='email']");
-  const message = document.querySelector("textarea[name='message']");
-
-  email.value = "";
-  message.value = "";
-
-  email.disabled = true;
-  message.disabled = true;
-  document.querySelector("#send").disabled = true;
+// under a sheet the header and footer are hidden outright rather than left
+// underneath it: covered-but-focusable strands keyboard and screen reader
+// users behind a panel they cannot see
+sheetLayout.addEventListener("change", () => {
+  document.body.classList.toggle("space-interactive", !sheetLayout.matches);
+  if (!space) return;
+  space.setLayout(sheetLayout.matches ? "narrow" : "wide");
+  if (openSectionId) space.focus(openSectionId, planetFraming());
 });
 
-document.getElementById("ready").addEventListener("click", () => ready());
-document
-  .getElementById("send")
-  .addEventListener("click", () => contactFormSubmission());
-window.addEventListener("resize", onWindowResize, false);
+function openSection(id, { fromNav = false } = {}) {
+  if (!SECTION_IDS.includes(id) || openSectionId === id) return;
+  if (openSectionId) closeSection({ restoreFocus: false, keepSpace: true });
 
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
+  const section = sectionEl(id);
+  section.hidden = false;
+  // the panel animates its height, so it needs to be laid out before the
+  // class that grows it lands
+  requestAnimationFrame(() => section.classList.add("is-open"));
 
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.querySelectorAll(".nav-link").forEach((link) => {
+    link.setAttribute("aria-expanded", String(link.dataset.section === id));
+  });
+
+  openSectionId = id;
+  if (fromNav) lastFocusedTrigger = navLink(id);
+  document.body.classList.add("is-panel-open");
+
+  // move the reading position to the panel that just appeared, so a keyboard
+  // or screen reader user carries on from there instead of from the nav
+  section.focus({ preventScroll: true });
+
+  if (sheetLayout.matches) {
+    // the sheet opens partway down the page and rises as you scroll, so start
+    // at the top: that is where the window onto the planet is
+    window.scrollTo({ top: 0, behavior: "auto" });
+  } else if (!space) {
+    section.scrollIntoView({ block: "start", behavior: "smooth" });
+  }
+
+  if (space) space.focus(id, planetFraming());
+  if (history.replaceState) history.replaceState(null, "", `#${id}`);
 }
 
-async function contactFormSubmission() {
-  const email = document.querySelector("input[name='email']").value;
-  const message = document.querySelector("textarea[name='message']").value;
-  if (email === "" || message === "") {
-    alert("Invalid form!");
+function closeSection({ restoreFocus = true, keepSpace = false } = {}) {
+  if (!openSectionId) return;
+
+  const section = sectionEl(openSectionId);
+  section.classList.remove("is-open");
+  section.hidden = true;
+
+  document
+    .querySelectorAll(".nav-link")
+    .forEach((link) => link.setAttribute("aria-expanded", "false"));
+
+  const closed = openSectionId;
+  openSectionId = null;
+
+  // clear this before restoring focus: the header is display:none under a
+  // sheet, and you cannot focus what is not being rendered
+  document.body.classList.remove("is-panel-open");
+
+  if (space && !keepSpace) space.reset();
+  if (history.replaceState) history.replaceState(null, "", " ");
+
+  if (restoreFocus) {
+    (lastFocusedTrigger || navLink(closed) || nav).focus();
+    lastFocusedTrigger = null;
+  }
+}
+
+nav.addEventListener("click", (event) => {
+  const link = event.target.closest(".nav-link");
+  if (!link) return;
+  event.preventDefault();
+  const id = link.dataset.section;
+  if (openSectionId === id) closeSection();
+  else openSection(id, { fromNav: true });
+});
+
+document.querySelectorAll(".back").forEach((button) => {
+  button.addEventListener("click", () => closeSection());
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && openSectionId) closeSection();
+});
+
+// deep links: /#WORKHISTORY opens straight into that section
+function openFromHash({ initial = false } = {}) {
+  const id = window.location.hash.replace("#", "");
+  if (!SECTION_IDS.includes(id)) return;
+
+  openSection(id);
+  if (!initial || !sheetLayout.matches) return;
+
+  // the fragment names a real element, so the browser scrolls to it on its
+  // own, after this script has run. undo that once layout settles: a reloaded
+  // deep link should start where a tapped one does, at the top, looking at
+  // the planet.
+  const toTop = () => window.scrollTo({ top: 0, behavior: "auto" });
+  requestAnimationFrame(toTop);
+  window.addEventListener("load", toTop, { once: true });
+}
+window.addEventListener("hashchange", () => openFromHash());
+
+// ------------------------------------------------------------- contact form
+
+const contactForm = document.querySelector("#contactForm");
+const contactStatus = document.querySelector("#contactStatus");
+const thanksDialog = document.querySelector("#thxDialog");
+
+function setStatus(message, tone = "error") {
+  contactStatus.textContent = message;
+  contactStatus.dataset.tone = tone;
+}
+
+contactForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const email = contactForm.elements.email;
+  const message = contactForm.elements.message;
+
+  if (!email.value.trim() || !email.checkValidity()) {
+    setStatus("Please enter a valid email address so I can reply.");
+    email.focus();
     return;
   }
-  if (messageSent) {
-    document.querySelector("#contactError").innerHTML =
-      "I received your previous message! I'll get back at you as soon as possible! 🚀";
+  if (!message.value.trim()) {
+    setStatus("Please write a message before sending.");
+    message.focus();
+    return;
   }
-  console.log(email, message);
-  const res = await fetch("https://formspree.io/f/meqbqgrw", {
-    method: "POST",
-    body: JSON.stringify({ email, message }),
-    mode: "no-cors",
-  }).then((res) => {
-    dialogRef.showModal();
-  });
+
+  const submit = contactForm.querySelector("button[type='submit']");
+  submit.disabled = true;
+  setStatus("Sending…", "pending");
+
+  try {
+    const response = await fetch("https://formspree.io/f/meqbqgrw", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ email: email.value, message: message.value }),
+    });
+
+    if (!response.ok) throw new Error(`Formspree replied ${response.status}`);
+
+    contactForm.reset();
+    setStatus("", "idle");
+    if (typeof thanksDialog.showModal === "function") thanksDialog.showModal();
+    else setStatus("Thanks! I'll get back to you as soon as I can.", "success");
+  } catch (error) {
+    setStatus(
+      "Something went wrong sending the form. You can email me directly at contact@federicocasadei.dev."
+    );
+  } finally {
+    submit.disabled = false;
+  }
+});
+
+thanksDialog.querySelector("button").addEventListener("click", () => {
+  thanksDialog.close();
+});
+
+thanksDialog.addEventListener("close", () => {
+  // the contacts panel is still on screen, so focus belongs there rather than
+  // on a nav link sitting behind a full screen sheet
+  (sectionEl("CONTACTS") || navLink("CONTACTS")).focus();
+});
+
+// ------------------------------------------------------------ the 3D scene
+
+function startSpace() {
+  import("./space.js")
+    .then(({ createSpace }) => {
+      space = createSpace({
+        canvas,
+        reducedMotion,
+        layout: sheetLayout.matches ? "narrow" : "wide",
+        getHomeScreenY: homeScreenY,
+        onSelect: (id) => {
+          lastFocusedTrigger = navLink(id);
+          openSection(id);
+        },
+      });
+
+      return space.ready.then(() => {
+        canvas.classList.add("is-visible");
+        // a deep link has already chosen where the camera belongs. flying the
+        // intro first would leave two tweens dragging it in opposite
+        // directions, which is what left a reloaded #SECTION staring at
+        // empty sky.
+        if (openSectionId) space.focus(openSectionId, planetFraming());
+        else space.playIntro();
+      });
+    })
+    .catch((error) => {
+      // no scene is a fine outcome: the page never depended on it. say so
+      // anyway, so a broken scene is not indistinguishable from a small window
+      console.warn("Skipping the 3D scene:", error);
+      document.body.classList.remove("has-space", "space-interactive");
+      space = null;
+    });
 }
+
+if (wantsSpace) {
+  document.body.classList.add("has-space");
+  document.body.classList.toggle("space-interactive", !sheetLayout.matches);
+
+  // the page is usable the moment it paints; the sky can arrive afterwards
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(startSpace, { timeout: 2500 });
+  } else {
+    window.addEventListener("load", () => setTimeout(startSpace, 200));
+  }
+}
+
+openFromHash({ initial: true });

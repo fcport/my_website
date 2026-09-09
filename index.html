@@ -4,41 +4,81 @@
     <meta charset="UTF-8" />
     <link
       rel="icon"
-      type="image/svg+xml"
+      type="image/png"
       href="/f.png" />
 
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0" />
-    <title>Federico Casadei</title>
+    <meta
+      name="description"
+      content="Federico Casadei — Senior Frontend Engineer specialising in TypeScript, Angular and single-page application architecture. Based in Rimini, Italy, relocating to Japan." />
+    <meta
+      name="theme-color"
+      content="#000000" />
+
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com" />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin />
+
+    <title>Federico Casadei — Senior Frontend Engineer</title>
+
+    <!-- with scripting off the panels are the page: every section unfolds in
+         order, so the CV stays readable to people and to crawlers alike -->
+    <noscript>
+      <style>
+        .panel[hidden] {
+          display: block !important;
+          position: static !important;
+          opacity: 1 !important;
+          transform: none !important;
+          max-height: none !important;
+          margin-bottom: 1.5rem;
+        }
+        .section-nav,
+        .space-hint,
+        .back,
+        canvas#bg {
+          display: none !important;
+        }
+      </style>
+    </noscript>
   </head>
-  <body class="hyperspace">
-    <canvas id="bg"></canvas>
+  <body>
+    <canvas
+      id="bg"
+      aria-hidden="true"></canvas>
+
+    <a
+      class="skip-link"
+      href="#main-content"
+      >Skip to content</a
+    >
+
     <dialog id="thxDialog">
       <p>
         Thanks for contacting me 😊! I'll get back to you as soon as possible.
       </p>
-      <button>Close</button>
+      <button type="button">Close</button>
     </dialog>
 
     <script
       type="module"
       src="/main.js"></script>
 
-    <div class="loading">
-      <div>Loading...</div>
-      <progress
-        id="progress"
-        max="100"
-        value="0"></progress>
-    </div>
-
-    <main>
+    <main id="main-content">
       <header>
         <span class="title">
           <img
             src="./assets/federico.webp"
-            alt="Federico Casadei"
+            alt=""
+            width="320"
+            height="320"
+            fetchpriority="high"
             class="img-title" />
           <h1 class="presentation">Hi! I'm Federico Casadei</h1>
         </span>
@@ -51,29 +91,71 @@
           <span lang="ja">日本語学生</span> — studying Japanese and relocating
           to Japan 🗾
         </p>
-        <p
-          id="instruction"
-          class="under-title-labels">
-          Click on the <b>READY</b> button to get to know me better!
+
+        <nav
+          class="section-nav"
+          aria-label="Sections">
+          <a
+            class="nav-link"
+            data-section="ABOUTME"
+            aria-expanded="false"
+            aria-controls="ABOUTME"
+            href="#ABOUTME"
+            >About me</a
+          >
+          <a
+            class="nav-link"
+            data-section="WORKHISTORY"
+            aria-expanded="false"
+            aria-controls="WORKHISTORY"
+            href="#WORKHISTORY"
+            >Work history</a
+          >
+          <a
+            class="nav-link"
+            data-section="BLOG"
+            aria-expanded="false"
+            aria-controls="BLOG"
+            href="#BLOG"
+            >Projects &amp; blog</a
+          >
+          <a
+            class="nav-link"
+            data-section="EDU"
+            aria-expanded="false"
+            aria-controls="EDU"
+            href="#EDU"
+            >Education</a
+          >
+          <a
+            class="nav-link"
+            data-section="CONTACTS"
+            aria-expanded="false"
+            aria-controls="CONTACTS"
+            href="#CONTACTS"
+            >Contact</a
+          >
+        </nav>
+
+        <p class="space-hint">
+          You can also click any planet to open the matching section 🚀
         </p>
-        <button
-          class="ready"
-          id="ready">
-          READY
-        </button>
       </header>
 
       <section
-        class="standard-planet hide"
-        id="ABOUTME">
-        <span class="section-title">
-          <h2>About Me</h2>
+        class="panel"
+        id="ABOUTME"
+        tabindex="-1"
+        aria-labelledby="ABOUTME-title"
+        hidden>
+        <div class="section-title">
+          <h2 id="ABOUTME-title">About Me</h2>
           <button
-            class="back hide"
-            id="back_ABOUTME">
+            type="button"
+            class="back">
             Back
           </button>
-        </span>
+        </div>
 
         <div>
           <div>
@@ -113,7 +195,8 @@
               pai). Currently working at
               <a
                 href="https://www.roomex.com/"
-                target="_blank">
+                target="_blank"
+            rel="noopener noreferrer">
                 <img
                   src="./assets/icons/roomex.jpeg"
                   style="height: 16px"
@@ -125,7 +208,7 @@
           </div>
         </div>
 
-        <h4>Technical skills</h4>
+        <h3>Technical skills</h3>
         <div>
           <ul>
             <li>
@@ -162,21 +245,24 @@
       </section>
 
       <section
-        class="standard-planet hide"
-        id="EDU">
-        <span class="section-title">
-          <h2>Education and Courses</h2>
+        class="panel"
+        id="EDU"
+        tabindex="-1"
+        aria-labelledby="EDU-title"
+        hidden>
+        <div class="section-title">
+          <h2 id="EDU-title">Education and Courses</h2>
           <button
-            class="back hide"
-            id="back_EDU">
+            type="button"
+            class="back">
             Back
           </button>
-        </span>
+        </div>
 
-        <h4>
+        <h3>
           Bachelor's Degree in Computer Engineering - Universitas Mercatorum
           (2018 - 2022)
-        </h4>
+        </h3>
 
         <div>
           Throughout my academic journey at Universitas Mercatorum, accredited by
@@ -189,7 +275,7 @@
           Supplement in English is available on request.
         </div>
 
-        <h4>Courses I attended</h4>
+        <h3>Courses I attended</h3>
         <div>
           In addition to my formal education, I have also actively pursued
           further learning opportunities through courses. These courses have
@@ -211,16 +297,19 @@
       </section>
 
       <section
-        class="standard-planet hide"
-        id="WORKHISTORY">
-        <span class="section-title">
-          <h2>Work History</h2>
+        class="panel"
+        id="WORKHISTORY"
+        tabindex="-1"
+        aria-labelledby="WORKHISTORY-title"
+        hidden>
+        <div class="section-title">
+          <h2 id="WORKHISTORY-title">Work History</h2>
           <button
-            class="back hide"
-            id="back_WORKHISTORY">
+            type="button"
+            class="back">
             Back
           </button>
-        </span>
+        </div>
 
         <p>
           Welcome to my Work History section! I am a passionate Frontend
@@ -237,7 +326,8 @@
           at
           <a
             href="https://www.roomex.com/"
-            target="_blank">
+            target="_blank"
+            rel="noopener noreferrer">
             <img
               src="./assets/icons/roomex.jpeg"
               style="height: 16px"
@@ -384,6 +474,7 @@
               <a
                 href="https://insights.mastercard.com/uk"
                 target="_blank"
+            rel="noopener noreferrer"
                 >here</a
               >). . Generated actionable data visualization and added
               significant value for clients leading to 89% of positive
@@ -484,27 +575,31 @@
       </section>
 
       <section
-        class="standard-planet hide"
-        id="BLOG">
-        <span class="section-title">
-          <h2>👩🏽‍🚀 Blog and Projects</h2>
+        class="panel"
+        id="BLOG"
+        tabindex="-1"
+        aria-labelledby="BLOG-title"
+        hidden>
+        <div class="section-title">
+          <h2 id="BLOG-title">👩🏽‍🚀 Blog and Projects</h2>
           <button
-            class="back hide"
-            id="back_BLOG">
+            type="button"
+            class="back">
             Back
           </button>
-        </span>
+        </div>
 
         <p>
           Sometime i post articles on Medium! You can read my articles
           <a
             href="https://medium.com/@federico.casadei.value"
-            target="_blank">
+            target="_blank"
+            rel="noopener noreferrer">
             HERE </a
           >!
         </p>
 
-        <h4>Personal projects</h4>
+        <h3>Personal projects</h3>
 
         <p>
           I build a lot of things on my own time. Most of them stay experiments,
@@ -519,6 +614,7 @@
               <a
                 href="https://omnism.it"
                 target="_blank"
+            rel="noopener noreferrer"
                 >omnism.it</a
               >
             </div>
@@ -563,6 +659,7 @@
               <a
                 href="https://autocompila.com"
                 target="_blank"
+            rel="noopener noreferrer"
                 >autocompila.com</a
               >
             </div>
@@ -595,75 +692,104 @@
       </section>
 
       <section
-        class="standard-planet hide"
-        id="CONTACTS">
-        <span class="section-title">
-          <h2>CONTACTS</h2>
+        class="panel"
+        id="CONTACTS"
+        tabindex="-1"
+        aria-labelledby="CONTACTS-title"
+        hidden>
+        <div class="section-title">
+          <h2 id="CONTACTS-title">CONTACTS</h2>
           <button
-            class="back hide"
-            id="back_CONTACTS">
+            type="button"
+            class="back">
             Back
           </button>
-        </span>
+        </div>
 
         <p>
-          You can contact me through my email or fill this form and I'll receive
-          your message!
+          You can write to me at
+          <a href="mailto:contact@federicocasadei.dev"
+            >contact@federicocasadei.dev</a
+          >, or fill in this form and I'll receive your message.
         </p>
 
-        <h4></h4>
-
-        <div class="contact-form">
-          <label> Your email: </label>
+        <form
+          class="contact-form"
+          id="contactForm"
+          novalidate>
+          <label for="contactEmail">Your email</label>
           <input
             type="email"
-            name="email" />
+            id="contactEmail"
+            name="email"
+            autocomplete="email"
+            required />
 
-          <label> Your message: </label>
+          <label for="contactMessage">Your message</label>
           <textarea
+            id="contactMessage"
             name="message"
-            rows="4"></textarea>
+            rows="4"
+            required></textarea>
 
-          <!-- your other form fields go here -->
+          <p
+            id="contactStatus"
+            class="form-status"
+            role="status"
+            aria-live="polite"></p>
+
           <button
             class="send"
-            id="send">
+            type="submit">
             Send
           </button>
-          <span id="contactError"> </span>
-        </div>
+        </form>
       </section>
 
       <footer>
-        <span>
-          <div>© 2026 Federico Casadei. All Rights Reserved.</div>
-          <div>contact@federicocasadei.dev</div>
+        <span class="footer-legal">
+          <span>© 2026 Federico Casadei. All Rights Reserved.</span>
+          <a href="mailto:contact@federicocasadei.dev"
+            >contact@federicocasadei.dev</a
+          >
         </span>
-        <span>
+        <span class="footer-social">
           <a
+            class="icon-link"
             href="https://github.com/fcport"
-            target="_blank">
+            target="_blank"
+            rel="noopener noreferrer">
             <img
               src="./assets/icons/github.png"
-              alt="github"
+              alt="GitHub (opens in a new tab)"
+              width="24"
+              height="24"
               class="icon"
           /></a>
 
           <a
+            class="icon-link"
             href="https://www.linkedin.com/in/federico-casadei-8b572b1b8/"
-            target="_blank">
+            target="_blank"
+            rel="noopener noreferrer">
             <img
               src="./assets/icons/linkedin.png"
-              alt="linkedin"
+              alt="LinkedIn (opens in a new tab)"
+              width="24"
+              height="24"
               class="icon"
           /></a>
 
           <a
+            class="icon-link"
             href="https://twitter.com/fedecdev"
-            target="_blank">
+            target="_blank"
+            rel="noopener noreferrer">
             <img
               src="./assets/icons/twitter.png"
-              alt="twitter"
+              alt="Twitter (opens in a new tab)"
+              width="24"
+              height="24"
               class="icon"
           /></a>
         </span>
