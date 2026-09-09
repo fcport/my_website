@@ -78,6 +78,8 @@ const BODIES = [
 // a tap that drifts more than this is a camera drag, not a planet click
 const CLICK_SLOP_PX = 8;
 
+const WARP_SECONDS = 2.2;
+
 // how the camera sits when a section is open. the distance comes from the
 // body's own radius, because saturn plus its rings is three times the span of
 // a bare planet and a fixed distance made it swallow the header. the offsets
@@ -325,6 +327,9 @@ export function createSpace({
     if (!body) return;
 
     selected = body;
+    // arriving somewhere ends the journey: stop the streaks now rather than
+    // leaving them firing behind the planet
+    endWarp();
     // up close a caption becomes a billboard across the page, and the open
     // panel already says which section this is
     refreshLabels();
@@ -430,6 +435,17 @@ export function createSpace({
 
   let warp = null;
 
+  // the warp owns its own lifetime. it used to be torn down inside the camera
+  // tween's onComplete, which a killed tween never fires: interrupt the intro
+  // by opening a section and the stars streamed forever.
+  function endWarp() {
+    if (!warp) return;
+    scene.remove(warp.points);
+    warp.geometry.dispose();
+    warp.points.material.dispose();
+    warp = null;
+  }
+
   function playIntro() {
     if (reducedMotion) return;
 
@@ -454,7 +470,13 @@ export function createSpace({
       })
     );
     scene.add(points);
-    warp = { points, positions, geometry };
+    warp = {
+      points,
+      positions,
+      geometry,
+      // a deadline, so the effect ends even if the tween never reports back
+      until: performance.now() + WARP_SECONDS * 1000,
+    };
 
     const start = HOME_DIRECTION.clone().multiplyScalar(homeDistance * 6);
     camera.position.copy(start);
@@ -463,14 +485,10 @@ export function createSpace({
       x: HOME_DIRECTION.x * homeDistance,
       y: HOME_DIRECTION.y * homeDistance,
       z: HOME_DIRECTION.z * homeDistance,
-      duration: 2.2,
+      duration: WARP_SECONDS,
       ease: "power2.inOut",
       overwrite: true,
-      onComplete: () => {
-        scene.remove(points);
-        geometry.dispose();
-        warp = null;
-      },
+      onComplete: endWarp,
     });
   }
 
@@ -492,6 +510,8 @@ export function createSpace({
     });
 
     sun.rotateY(0.0005);
+
+    if (warp && performance.now() >= warp.until) endWarp();
 
     if (warp) {
       const { positions, geometry } = warp;
